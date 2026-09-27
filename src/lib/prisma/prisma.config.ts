@@ -1,4 +1,4 @@
-import { config } from '@/config/env'
+import { config } from '../../config/env'
 import { defineConfig } from '@prisma/config'
 
 export default defineConfig({
