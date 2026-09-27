@@ -1,0 +1,32 @@
+{
+  "name": "dev-crew",
+  "version": "1.0.0",
+  "description": "開発者向け支援ツールです",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate": "npm run generate:prisma && npm run generate:orval",
+    "generate:prisma": "npx prisma generate --config ./lib/prisma/prisma.config.ts",
+    "generate:orval": "npx orval --config ./lib/api/orval.config.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kita12123/dev-crew.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Kita12123/dev-crew/issues"
+  },
+  "homepage": "https://github.com/Kita12123/dev-crew#readme",
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "orval": "^8.38.0",
+    "prisma": "^7.10.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.10.0"
+  }
+}
