@@ -14,16 +14,3 @@ npm i
 ```
 npm run generate
 ```
-
-## Setup
-
-1. Next.js
-```
-npm init -y
-```
-
-2. Prisma
-```
-npm install prisma --save-dev
-npm install prisma/client@latest
-```
