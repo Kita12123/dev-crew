@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    String @id @default(uuid()) @db.Uuid
+  email String @unique @db.VarChar(50)
+  name  String @db.VarChar(255)
+
+  credentials Credential[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Credential {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  provider IntegrationProvider
+  value    String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+
+  @@map("credentials")
+}
+
+model Workspace {
+  id          String  @id @default(uuid()) @db.Uuid
+  name        String  @db.VarChar(255)
+  description String? @db.Text
+
+  integrations WorkspaceIntegration[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("workspaces")
+}
+
+model WorkspaceIntegration {
+  workspaceId   String @db.Uuid
+  integrationId String @db.Uuid
+
+  workspace   Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  integration Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@id([workspaceId, integrationId])
+  @@index([integrationId])
+
+  @@map("workspace_integrations")
+}
+
+model Integration {
+  id       String             @id @default(uuid()) @db.Uuid
+  provider IntegrationProvider
+
+  redmine RedmineIntegration?
+  github  GithubIntegration?
+  slack   SlackIntegration?
+
+  workspaces WorkspaceIntegration[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("integrations")
+}
+
+model RedmineIntegration {
+  id String @id @default(uuid()) @db.Uuid
+
+  integrationId String      @unique @db.Uuid
+  integration   Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  projectId Int
+  url       String @db.VarChar(2048)
+
+  @@unique([projectId, url])
+
+  @@map("redmine_integrations")
+}
+
+model GithubIntegration {
+  id String @id @default(uuid()) @db.Uuid
+
+  integrationId String      @unique @db.Uuid
+  integration   Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  owner      String @db.VarChar(255)
+  repository String @db.VarChar(255)
+
+  @@unique([owner, repository])
+
+  @@map("github_integrations")
+}
+
+model SlackIntegration {
+  id String @id @default(uuid()) @db.Uuid
+
+  integrationId String      @unique @db.Uuid
+  integration   Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  channelId String @unique @db.VarChar(255)
+
+  @@map("slack_integrations")
+}
+
+enum IntegrationProvider {
+  REDMINE
+  GITHUB
+  SLACK
+}
