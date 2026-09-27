@@ -1,8 +1,8 @@
 import type { PrismaClient, IntegrationProvider } from "@gen/prisma/client";
 
-import type { CredentialStore } from "./_credentialStore";
+import type { CredentialStore } from ".";
 
-export class PrismaCredentialStore implements CredentialStore {
+export class DbCredentialStore implements CredentialStore {
     constructor(private readonly prisma: PrismaClient) { }
 
     async get(
