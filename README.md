@@ -6,8 +6,9 @@
 - [技術選定](https://qiita.com/kitahide12123/items/6cc83489707b83c8f123)
 
 ## Getting Started
-1. Install Dependencies
+1. Install Dependency Packages
 ```
+cd src
 npm i
 ```
 2. Generate Code
