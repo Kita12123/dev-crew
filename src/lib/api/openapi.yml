@@ -1,0 +1,609 @@
+openapi: 3.1.0
+
+info:
+  title: Dev Crew API
+  version: 1.0.0
+  description: |
+    Dev Crew management API.
+    Manages users, credentials, workspaces, and workspace integrations.
+
+servers:
+  - url: http://localhost:3000
+
+tags:
+  - name: Users
+  - name: Credentials
+  - name: Workspaces
+  - name: Integrations
+
+paths:
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: Get a user
+      operationId: getUser
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - Users
+      summary: Update a user
+      operationId: updateUser
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - Users
+      summary: Delete a user
+      operationId: deleteUser
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '204':
+          description: User deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /users/{userId}/credentials:
+    get:
+      tags:
+        - Credentials
+      summary: List user credentials
+      operationId: listCredentials
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Credentials
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Credential'
+
+    post:
+      tags:
+        - Credentials
+      summary: Create a credential
+      operationId: createCredential
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CredentialInput'
+      responses:
+        '201':
+          description: Created credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credential'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /users/{userId}/credentials/{credentialId}:
+    get:
+      tags:
+        - Credentials
+      summary: Get a credential
+      operationId: getCredential
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/CredentialId'
+      responses:
+        '200':
+          description: Credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credential'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - Credentials
+      summary: Update a credential
+      operationId: updateCredential
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/CredentialId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CredentialInput'
+      responses:
+        '200':
+          description: Updated credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credential'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - Credentials
+      summary: Delete a credential
+      operationId: deleteCredential
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/CredentialId'
+      responses:
+        '204':
+          description: Credential deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /workspaces:
+    get:
+      tags:
+        - Workspaces
+      summary: List workspaces
+      operationId: listWorkspaces
+      responses:
+        '200':
+          description: Workspaces
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workspace'
+
+    post:
+      tags:
+        - Workspaces
+      summary: Create a workspace
+      operationId: createWorkspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceInput'
+      responses:
+        '201':
+          description: Created workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+
+  /workspaces/{workspaceId}:
+    get:
+      tags:
+        - Workspaces
+      summary: Get a workspace
+      operationId: getWorkspace
+      parameters:
+        - $ref: '#/components/parameters/WorkspaceId'
+      responses:
+        '200':
+          description: Workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - Workspaces
+      summary: Update a workspace
+      operationId: updateWorkspace
+      parameters:
+        - $ref: '#/components/parameters/WorkspaceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceInput'
+      responses:
+        '200':
+          description: Updated workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - Workspaces
+      summary: Delete a workspace
+      operationId: deleteWorkspace
+      parameters:
+        - $ref: '#/components/parameters/WorkspaceId'
+      responses:
+        '204':
+          description: Workspace deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /workspaces/{workspaceId}/integrations:
+    get:
+      tags:
+        - Integrations
+      summary: List workspace integrations
+      operationId: listIntegrations
+      parameters:
+        - $ref: '#/components/parameters/WorkspaceId'
+      responses:
+        '200':
+          description: Integrations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Integration'
+
+    post:
+      tags:
+        - Integrations
+      summary: Create a workspace integration
+      operationId: createIntegration
+      parameters:
+        - $ref: '#/components/parameters/WorkspaceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegrationInput'
+      responses:
+        '201':
+          description: Created integration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Integration'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /workspaces/{workspaceId}/integrations/{integrationId}:
+    get:
+      tags:
+        - Integrations
+      summary: Get a workspace integration
+      operationId: getIntegration
+      parameters:
+        - $ref: '#/components/parameters/WorkspaceId'
+        - $ref: '#/components/parameters/IntegrationId'
+      responses:
+        '200':
+          description: Integration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Integration'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - Integrations
+      summary: Update a workspace integration
+      operationId: updateIntegration
+      parameters:
+        - $ref: '#/components/parameters/WorkspaceId'
+        - $ref: '#/components/parameters/IntegrationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegrationInput'
+      responses:
+        '200':
+          description: Updated integration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Integration'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - Integrations
+      summary: Delete a workspace integration
+      operationId: deleteIntegration
+      parameters:
+        - $ref: '#/components/parameters/WorkspaceId'
+        - $ref: '#/components/parameters/IntegrationId'
+      responses:
+        '204':
+          description: Integration deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  parameters:
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    CredentialId:
+      name: credentialId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    WorkspaceId:
+      name: workspaceId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    IntegrationId:
+      name: integrationId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - credentials
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        credentials:
+          type: array
+          items:
+            $ref: '#/components/schemas/Credential'
+
+    UserInput:
+      type: object
+      required:
+        - email
+        - name
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+
+    Credential:
+      type: object
+      required:
+        - id
+        - provider
+        - value
+      properties:
+        id:
+          type: string
+          format: uuid
+        provider:
+          $ref: '#/components/schemas/IntegrationProvider'
+        value:
+          type: string
+
+    CredentialInput:
+      type: object
+      required:
+        - provider
+        - value
+      properties:
+        provider:
+          $ref: '#/components/schemas/IntegrationProvider'
+        value:
+          type: string
+
+    Workspace:
+      type: object
+      required:
+        - id
+        - name
+        - integrations
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        integrations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Integration'
+
+    WorkspaceInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+    Integration:
+      type: object
+      required:
+        - id
+        - provider
+      properties:
+        id:
+          type: string
+          format: uuid
+        provider:
+          $ref: '#/components/schemas/IntegrationProvider'
+        redmine:
+          $ref: '#/components/schemas/RedmineIntegration'
+        github:
+          $ref: '#/components/schemas/GithubIntegration'
+        slack:
+          $ref: '#/components/schemas/SlackIntegration'
+
+    IntegrationInput:
+      oneOf:
+        - $ref: '#/components/schemas/RedmineIntegrationInput'
+        - $ref: '#/components/schemas/GithubIntegrationInput'
+        - $ref: '#/components/schemas/SlackIntegrationInput'
+      discriminator:
+        propertyName: provider
+        mapping:
+          REDMINE: '#/components/schemas/RedmineIntegrationInput'
+          GITHUB: '#/components/schemas/GithubIntegrationInput'
+          SLACK: '#/components/schemas/SlackIntegrationInput'
+
+    IntegrationProvider:
+      type: string
+      enum:
+        - REDMINE
+        - GITHUB
+        - SLACK
+
+    RedmineIntegration:
+      type: object
+      required:
+        - url
+        - projectId
+      properties:
+        url:
+          type: string
+          format: uri
+        projectId:
+          type: integer
+
+    RedmineIntegrationInput:
+      type: object
+      required:
+        - provider
+        - url
+        - projectId
+      properties:
+        provider:
+          type: string
+          const: REDMINE
+        url:
+          type: string
+          format: uri
+        projectId:
+          type: integer
+
+    GithubIntegration:
+      type: object
+      required:
+        - owner
+        - repository
+      properties:
+        owner:
+          type: string
+        repository:
+          type: string
+
+    GithubIntegrationInput:
+      type: object
+      required:
+        - provider
+        - owner
+        - repository
+      properties:
+        provider:
+          type: string
+          const: GITHUB
+        owner:
+          type: string
+        repository:
+          type: string
+
+    SlackIntegration:
+      type: object
+      required:
+        - teamId
+        - channelId
+      properties:
+        teamId:
+          type: string
+        channelId:
+          type: string
+
+    SlackIntegrationInput:
+      type: object
+      required:
+        - provider
+        - teamId
+        - channelId
+      properties:
+        provider:
+          type: string
+          const: SLACK
+        teamId:
+          type: string
+        channelId:
+          type: string
+
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
