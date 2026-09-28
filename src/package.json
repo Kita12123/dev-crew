@@ -4,10 +4,12 @@
   "description": "開発者向け支援ツールです",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "generate": "npm run generate:prisma && npm run generate:orval",
+    "dev": "tsx server.ts",
+    "build": "tsc",
+    "generate": "npm run generate:prisma && npm run generate:rdmn && npm run generate:api",
     "generate:prisma": "npx prisma generate --config ./lib/prisma/prisma.config.ts",
-    "generate:orval": "npx orval --config ./lib/rdmn/orval.config.ts"
+    "generate:rdmn": "npx orval --config ./lib/rdmn/orval.config.ts",
+    "generate:api": "fastify-openapi-typescript --input ./lib/api/openapi.yml --output ./lib/generated/api"
   },
   "repository": {
     "type": "git",
@@ -25,13 +27,18 @@
     "@types/node": "^26.6.3",
     "@walecloud/fastify-openapi-typescript-generator": "^1.5.0",
     "orval": "^8.38.0",
-    "prisma": "^7.10.0"
+    "prisma": "^7.10.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.x"
   },
   "dependencies": {
+    "@fastify/cors": "^11.3.0",
     "@modelcontextprotocol/server": "^2.0.0",
     "@prisma/client": "^7.10.0",
     "@slack/bolt": "^5.1.0",
     "octokit": "^5.0.5",
-    "zod": "^4.6.5"
+    "zod": "^4.6.5",
+    "fastify": "^5.12.0",
+    "fastify-openapi-glue": "^4.11.4"
   }
 }
