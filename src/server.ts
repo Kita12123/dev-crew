@@ -2,7 +2,9 @@ import cors from "@fastify/cors";
 import Fastify from "fastify";
 import openapiGlue from "fastify-openapi-glue";
 
+import { prisma } from "@/db/client";
 import { handlers } from "@/handler";
+import { registerErrorHandler } from "@/handler/errors";
 
 const app = Fastify({
     logger: true,
@@ -14,12 +16,19 @@ const app = Fastify({
 });
 
 const main = async () => {
+
+    registerErrorHandler(app);
+
     await app.register(cors, {
         origin: "*"
     });
     await app.register(openapiGlue, {
         specification: "./lib/api/openapi.yml",
         serviceHandlers: handlers,
+    });
+
+    app.addHook("onClose", async () => {
+        await prisma.$disconnect();
     });
 
     await app.listen({

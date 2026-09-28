@@ -1,3 +1,12 @@
+for (const envFile of [".env", "../.env"]) {
+    try {
+        process.loadEnvFile?.(envFile);
+        break;
+    } catch {
+        // 候補が見つからない場合は次の候補へ
+    }
+}
+
 export const config = {
     db: {
         url: process.env.DATABASE_URL!,
