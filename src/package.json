@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate": "npm run generate:prisma && npm run generate:orval",
     "generate:prisma": "npx prisma generate --config ./lib/prisma/prisma.config.ts",
-    "generate:orval": "npx orval --config ./lib/api/orval.config.ts"
+    "generate:orval": "npx orval --config ./lib/rdmn/orval.config.ts"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/Kita12123/dev-crew#readme",
   "devDependencies": {
     "@types/node": "^26.6.3",
+    "@walecloud/fastify-openapi-typescript-generator": "^1.5.0",
     "orval": "^8.38.0",
     "prisma": "^7.10.0"
   },
